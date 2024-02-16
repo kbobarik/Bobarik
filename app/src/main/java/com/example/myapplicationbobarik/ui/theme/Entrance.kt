@@ -97,7 +97,7 @@ fun Entrance() {
             Text(text = "Вход по E-mail", fontSize = 14.sp, fontFamily = FontFamily.SansSerif, modifier = Modifier.padding(bottom = 10.dp))
 
                 var email: String by rememberSaveable { mutableStateOf("") }
-                var password: String by rememberSaveable { mutableStateOf("") }
+
                 CustomEmail(search = email, onValueChange = { newemail -> email = newemail
                 })
                 if("@" in email) {
