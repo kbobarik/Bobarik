@@ -88,9 +88,19 @@ fun code_input() {
                     fontSize = 15.sp,
                     color = Color(0xFF939396)
                 )
-
-
+                var timer by remember { mutableStateOf(60) }
+                LaunchedEffect(key1 = timer) {
+                    if (timer > 0) {
+                        delay(1_000)
+                        timer -= 1
+                    }
                 }
+
+                Text (text = "будет через "+ timer.toString()+" секунд", fontSize = 15.sp, color = Color(0xFF939396))
+
+
+
+            }
             }
 
         }
