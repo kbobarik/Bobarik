@@ -1,36 +1,33 @@
-package com.example.myapplicationbobarik.ui.theme
+package com.example.myapplicationbobarik.ui.theme.presentation
 
+import android.util.Patterns
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,19 +35,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.InspectableModifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myapplicationbobarik.R
+import com.example.myapplicationbobarik.ui.theme.code_input
+
 
 @Composable
 @Preview
 fun Entrance() {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -87,63 +89,80 @@ fun Entrance() {
             fontFamily = FontFamily.SansSerif
         )
 
-        Column(
-            Modifier
-                .fillMaxWidth(1f)
-                .padding(top = 50.dp),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(text = "Вход по E-mail", fontSize = 14.sp, fontFamily = FontFamily.SansSerif, modifier = Modifier.padding(bottom = 10.dp))
-
-                var email: String by rememberSaveable { mutableStateOf("") }
-
-                CustomEmail(search = email, onValueChange = { newemail -> email = newemail
-                })
-                if("@" in email) {
-                    Button(
-                        modifier = Modifier.padding(top = 20.dp).width(width = 500.dp)
-                            .height(height = 56.dp),
-                        onClick = {},
-                        shape = RoundedCornerShape(size = 12.dp),
-                        colors = ButtonDefaults.buttonColors(
-
-                            containerColor = Color(0xFF1A6FEE),
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Text(text = "Далее", fontSize = 17.sp)
-                    }
-                }else
-                    {
-                        Button(
-                            modifier = Modifier.padding(top = 20.dp).width(width = 500.dp)
-                                .height(height = 56.dp),
-                            onClick = {},
-                            shape = RoundedCornerShape(size = 12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFC9D4FB),
-                                contentColor = Color.White
-                            )
-                        ) {
-                            Text(text = "Далее", fontSize = 17.sp)
-                        }
-
-                    }
+       Surface(modifier = Modifier.fillMaxSize()) {
+           val viewModel = viewModel<EmailViewModel>()
+           val state = viewModel.state
+           Column(
+               Modifier
+                   .fillMaxWidth(1f)
+                   .padding(top = 50.dp),
+               verticalArrangement = Arrangement.Top,
+               horizontalAlignment = Alignment.Start
+           ) {
 
 
+               Text(text = "Вход по E-mail", fontSize = 14.sp, fontFamily = FontFamily.SansSerif, modifier = Modifier.padding(bottom = 10.dp))
+
+               var email: String by rememberSaveable { mutableStateOf("") }
+
+               CustomEmail(search = state.email, onValueChange = { viewModel.onEvent(RegistrationEvent.EmailChanged(it))
+               }, isError = state.emailError!=null)
+               if (state.emailError!=null)
+               {
+                   Text(text = state.emailError, color = MaterialTheme.colorScheme.error)
+               }
+               Spacer(modifier = Modifier.height(16.dp))
+               if(Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
+                   Button(
+                       onClick = { },
+                       modifier = Modifier
+                           .padding(top = 20.dp)
+                           .width(width = 500.dp)
+                           .height(height = 56.dp),
+                       shape = RoundedCornerShape(size = 12.dp),
+                       colors = ButtonDefaults.buttonColors(
+
+                           containerColor = Color(0xFF1A6FEE),
+                           contentColor = Color.White
+                       )
+                   ) {
+                       Text(text = "Далее", fontSize = 17.sp)
+                   }
+               }else
+               {
+                   Button(
+                       modifier = Modifier
+                           .padding(top = 20.dp)
+                           .width(width = 500.dp)
+                           .height(height = 56.dp),
+                       onClick = {viewModel.onEvent(RegistrationEvent.submit)},
+                       shape = RoundedCornerShape(size = 12.dp),
+                       colors = ButtonDefaults.buttonColors(
+                           containerColor = Color(0xFFC9D4FB),
+                           contentColor = Color.White
+                       )
+                   ) {
+                       Text(text = "Далее", fontSize = 17.sp)
+                   }
+
+               }
 
 
-            }
 
-        }
+
+           }
+
+       }
+       }
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 50.dp),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(modifier = Modifier.padding(bottom = 20.dp), text = "Или войдите с помощью", fontSize = 15.sp, fontFamily = FontFamily.SansSerif, color = Color(0xFF939396))
-            Button(modifier = Modifier.width(width = 335.dp).height(height = 60.dp),onClick = {},shape = RoundedCornerShape(size = 12.dp), border = BorderStroke(1.dp, Color(0xFFEBEBEB)),colors = ButtonDefaults.buttonColors(containerColor = Color.White,contentColor = Color.Black)) {
+            Button(modifier = Modifier
+                .width(width = 335.dp)
+                .height(height = 60.dp),onClick = {},shape = RoundedCornerShape(size = 12.dp), border = BorderStroke(1.dp, Color(0xFFEBEBEB)),colors = ButtonDefaults.buttonColors(containerColor = Color.White,contentColor = Color.Black)) {
                 Text(text =  "Войти с Яндекс", fontSize = 17.sp)
             }
 
@@ -162,7 +181,8 @@ fun Entrance() {
 fun CustomEmail(
     search: String,
     modifier: Modifier = Modifier,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    isError: Boolean
 ) {
     Box(
         modifier = modifier
@@ -171,6 +191,10 @@ fun CustomEmail(
 
     ) {
         OutlinedTextField(
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email
+            ),
+            isError = isError,
             value = search,
             onValueChange = onValueChange,
             textStyle = TextStyle(
