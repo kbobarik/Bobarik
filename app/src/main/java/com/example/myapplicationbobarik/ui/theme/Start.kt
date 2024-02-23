@@ -82,16 +82,16 @@ fun Start(navController: NavController){
             Image(painter = painterResource(id = R.drawable.logo), contentDescription = "", contentScale = ContentScale.FillWidth, modifier = Modifier.width(263.dp))        }
 
     }
-    var timer by remember { mutableStateOf(3) }
+    var timer by remember { mutableStateOf(1.5) }
     LaunchedEffect(key1 = timer) {
         if (timer > 0) {
             delay(1_000)
             timer -= 1
 
         }
-        else if(timer == 0)
+        else if(timer <= 0.0)
         {
-            navController.navigate(Screen.Onboard.route)
+            navController.navigate(Screen.Pager.route)
         }
 
 

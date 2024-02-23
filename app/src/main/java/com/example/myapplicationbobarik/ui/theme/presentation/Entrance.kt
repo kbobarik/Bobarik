@@ -2,6 +2,7 @@ package com.example.myapplicationbobarik.ui.theme.presentation
 
 import android.util.Patterns
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -28,6 +31,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -118,7 +122,9 @@ fun Entrance(navController:NavController){
                     Spacer(modifier = Modifier.height(16.dp))
                     if(Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
                         Button(
-                            onClick = {viewModel.onEvent(RegistrationEvent.submit)},
+                            onClick = {viewModel.onEvent(RegistrationEvent.submit)
+                                navController.navigate(
+                                    Screen.InputCode.route) },
                             modifier = Modifier
                                 .padding(top = 20.dp)
                                 .width(width = 500.dp)
@@ -236,4 +242,6 @@ fun CustomEmail(
 
     }
 }
+
+
 

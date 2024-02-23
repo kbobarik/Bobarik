@@ -73,5 +73,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     // Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("androidx.compose.foundation:foundation:1.6.2")
 
 }
