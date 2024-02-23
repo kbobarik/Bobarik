@@ -26,8 +26,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,115 +47,117 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.NavController
 import com.example.myapplicationbobarik.R
-import com.example.myapplicationbobarik.ui.theme.code_input
-
+import com.example.myapplicationbobarik.ui.theme.domain.use.Screen
+import kotlinx.coroutines.delay
 
 @Composable
-@Preview
-fun Entrance() {
+fun Entrance(navController:NavController){
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(20.dp, 80.dp),
-        horizontalAlignment = Alignment.Start
-    ) {
-
-        Row(
+    Surface(modifier = Modifier
+        .fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 0.dp, 0.dp, 20.dp),
-            verticalAlignment = Alignment.Top
-
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(20.dp, 80.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.hello),
-                contentDescription = "",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier.width(32.dp)
-            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 0.dp, 0.dp, 20.dp),
+                verticalAlignment = Alignment.Top
+
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.hello),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillWidth,
+                    modifier = Modifier.width(32.dp)
+                )
+                Text(
+                    text = "Добро пожaловать!",
+                    fontSize = 25.sp,
+                    fontWeight = Bold,
+                    fontFamily = FontFamily.SansSerif,
+                    modifier = Modifier.offset(16.dp, 0.dp)
+                )
+
+            }
             Text(
-                text = "Добро пожaловать!",
-                fontSize = 25.sp,
-                fontWeight = Bold,
-                fontFamily = FontFamily.SansSerif,
-                modifier = Modifier.offset(16.dp, 0.dp)
+                text = "Войдите, чтобы пользоваться функциями приложения",
+                fontSize = 15.sp,
+                fontFamily = FontFamily.SansSerif
             )
 
+            Surface(modifier = Modifier.fillMaxSize()) {
+                val viewModel = viewModel<EmailViewModel>()
+                val state = viewModel.state
+                Column(
+                    Modifier
+                        .fillMaxWidth(1f)
+                        .padding(top = 50.dp),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.Start
+                ) {
+
+
+                    Text(text = "Вход по E-mail", fontSize = 14.sp, fontFamily = FontFamily.SansSerif, modifier = Modifier.padding(bottom = 10.dp))
+
+
+
+                    CustomEmail(search = state.email, onValueChange = { viewModel.onEvent(RegistrationEvent.EmailChanged(it))
+                    }, isError = state.emailError!=null)
+                    if (state.emailError!=null)
+                    {
+                        Text(text = state.emailError, color = MaterialTheme.colorScheme.error)
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    if(Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
+                        Button(
+                            onClick = {viewModel.onEvent(RegistrationEvent.submit)},
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .width(width = 500.dp)
+                                .height(height = 56.dp),
+                            shape = RoundedCornerShape(size = 12.dp),
+                            colors = ButtonDefaults.buttonColors(
+
+                                containerColor = Color(0xFF1A6FEE),
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(text = "Далее", fontSize = 17.sp)
+                        }
+                    }else
+                    {
+                        Button(
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .width(width = 500.dp)
+                                .height(height = 56.dp),
+                            onClick = {viewModel.onEvent(RegistrationEvent.submit)},
+                            shape = RoundedCornerShape(size = 12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFC9D4FB),
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(text = "Далее", fontSize = 17.sp)
+                        }
+
+                    }
+
+
+
+
+                }
+
+            }
         }
-        Text(
-            text = "Войдите, чтобы пользоваться функциями приложения",
-            fontSize = 15.sp,
-            fontFamily = FontFamily.SansSerif
-        )
-
-       Surface(modifier = Modifier.fillMaxSize()) {
-           val viewModel = viewModel<EmailViewModel>()
-           val state = viewModel.state
-           Column(
-               Modifier
-                   .fillMaxWidth(1f)
-                   .padding(top = 50.dp),
-               verticalArrangement = Arrangement.Top,
-               horizontalAlignment = Alignment.Start
-           ) {
-
-
-               Text(text = "Вход по E-mail", fontSize = 14.sp, fontFamily = FontFamily.SansSerif, modifier = Modifier.padding(bottom = 10.dp))
-
-               var email: String by rememberSaveable { mutableStateOf("") }
-
-               CustomEmail(search = state.email, onValueChange = { viewModel.onEvent(RegistrationEvent.EmailChanged(it))
-               }, isError = state.emailError!=null)
-               if (state.emailError!=null)
-               {
-                   Text(text = state.emailError, color = MaterialTheme.colorScheme.error)
-               }
-               Spacer(modifier = Modifier.height(16.dp))
-               if(Patterns.EMAIL_ADDRESS.matcher(state.email).matches()) {
-                   Button(
-                       onClick = { },
-                       modifier = Modifier
-                           .padding(top = 20.dp)
-                           .width(width = 500.dp)
-                           .height(height = 56.dp),
-                       shape = RoundedCornerShape(size = 12.dp),
-                       colors = ButtonDefaults.buttonColors(
-
-                           containerColor = Color(0xFF1A6FEE),
-                           contentColor = Color.White
-                       )
-                   ) {
-                       Text(text = "Далее", fontSize = 17.sp)
-                   }
-               }else
-               {
-                   Button(
-                       modifier = Modifier
-                           .padding(top = 20.dp)
-                           .width(width = 500.dp)
-                           .height(height = 56.dp),
-                       onClick = {viewModel.onEvent(RegistrationEvent.submit)},
-                       shape = RoundedCornerShape(size = 12.dp),
-                       colors = ButtonDefaults.buttonColors(
-                           containerColor = Color(0xFFC9D4FB),
-                           contentColor = Color.White
-                       )
-                   ) {
-                       Text(text = "Далее", fontSize = 17.sp)
-                   }
-
-               }
-
-
-
-
-           }
-
-       }
-       }
         Column(modifier = Modifier
             .fillMaxSize()
             .padding(bottom = 50.dp),
@@ -166,12 +170,18 @@ fun Entrance() {
                 Text(text =  "Войти с Яндекс", fontSize = 17.sp)
             }
 
+
+
+
+
         }
 
-
-
-
     }
+
+}
+
+
+
 
 
 

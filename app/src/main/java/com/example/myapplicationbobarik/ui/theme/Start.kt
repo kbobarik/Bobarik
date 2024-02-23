@@ -7,7 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -18,11 +24,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.myapplicationbobarik.R
+import com.example.myapplicationbobarik.ui.theme.domain.use.Screen
+import kotlinx.coroutines.delay
 
-@Preview
 @Composable
-fun Start(){
+fun Start(navController: NavController){
     Box(modifier = Modifier
         .fillMaxSize(1f)
         .background(
@@ -73,4 +82,21 @@ fun Start(){
             Image(painter = painterResource(id = R.drawable.logo), contentDescription = "", contentScale = ContentScale.FillWidth, modifier = Modifier.width(263.dp))        }
 
     }
+    var timer by remember { mutableStateOf(3) }
+    LaunchedEffect(key1 = timer) {
+        if (timer > 0) {
+            delay(1_000)
+            timer -= 1
+
+        }
+        else if(timer == 0)
+        {
+            navController.navigate(Screen.Onboard.route)
+        }
+
+
+    }
+
+
+
 }
