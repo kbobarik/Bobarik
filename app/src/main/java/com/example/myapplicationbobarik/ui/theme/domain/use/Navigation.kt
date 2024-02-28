@@ -1,5 +1,6 @@
 package com.example.myapplicationbobarik.ui.theme.domain.use
 
+import ViewModelApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,8 @@ import com.example.myapplicationbobarik.ui.theme.InputCode
 import com.example.myapplicationbobarik.ui.theme.presentation.Entrance
 
 @Composable
-fun Navigation() {
+fun Navigation(viewModelSmart: ViewModelApi) {
+
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.MainScreen.route)
@@ -37,7 +39,7 @@ fun Navigation() {
         }
         composable(route = Screen.Entrance.route)
         {
-            Entrance(navController = navController)
+            Entrance(navController = navController, viewModelApi =   viewModelSmart)
         }
         composable(route = Screen.InputCode.route)
         {

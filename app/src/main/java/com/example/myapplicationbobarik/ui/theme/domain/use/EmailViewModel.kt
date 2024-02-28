@@ -1,15 +1,15 @@
-package com.example.myapplicationbobarik.ui.theme.presentation
+package com.example.myapplicationbobarik.ui.theme.domain.use
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewModelScope
-import com.example.myapplicationbobarik.ui.theme.domain.use.ValidationEmail
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.myapplicationbobarik.ui.theme.presentation.RegestationState
+import com.example.myapplicationbobarik.ui.theme.presentation.RegistrationEvent
 
 class EmailViewModel(
     private val validateEmail: ValidationEmail = ValidationEmail()

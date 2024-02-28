@@ -21,7 +21,7 @@ class ViewModelApi(private val repository: Repository): ViewModel() {
                     is Result.Error -> {
                         _showErrorToastChannel.send(true)
                     }
-                    is Result.Success-> {
+                    is Result.Success -> {
                         _showErrorToastChannel.send(false)
                     }
                 }

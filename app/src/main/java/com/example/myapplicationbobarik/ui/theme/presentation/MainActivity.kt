@@ -29,21 +29,18 @@ import com.exaple.api.api.RetrofitInstance
 import kotlin.time.TimeSource
 
 class MainActivity : ComponentActivity() {
-    //    val viewModelSmart by viewModels<ViewModelApi>(factoryProducer = {
-//        object : ViewModelProvider.Factory {
-//            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                return ViewModelApi(ReositoryImpl(RetrofitInstance.apiSmartLab))
-//                        as T
-//            }
-//        }
-//    })
-    @OptIn(ExperimentalFoundationApi::class)
+        val viewModelSmart by viewModels<ViewModelApi>(factoryProducer = {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return ViewModelApi(ReositoryImpl(RetrofitInstance.apiSmartLab))
+                        as T
+            }
+        }
+    })
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            Navigation()
-
+             Navigation(viewModelSmart)
 
         }
     }
